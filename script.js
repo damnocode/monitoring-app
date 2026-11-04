@@ -61,7 +61,7 @@ function showToast(message, type = 'success') {
 }
 
 function switchTab(tab) {
-    const tabs = ['dashboard', 'skpk', 'aplikasi', 'input'];
+    const tabs = ['dashboard', 'skpk', 'aplikasi', 'pendataan'];
     tabs.forEach(t => {
         const el = document.getElementById(`tab-${t}`);
         if(el) el.classList.add('hidden');
@@ -73,8 +73,8 @@ function switchTab(tab) {
     const titles = {
         'dashboard': 'Dashboard Monitoring',
         'skpk': 'Daftar SKPK',
-        'aplikasi': 'Daftar Aplikasi SKPK',
-        'input': 'Form Input Data Aplikasi'
+        'aplikasi': 'Aplikasi SKPK',
+        'pendataan': 'Pendataan Aplikasi'
     };
     const titleEl = document.getElementById('pageTitle');
     if(titleEl) titleEl.innerText = titles[tab];
@@ -174,7 +174,7 @@ async function fetchAllData() {
     });
 
     if (!WEB_APP_URL || WEB_APP_URL.includes("MASUKKAN_URL")) {
-        if(loadingStateEl) loadingStateEl.innerHTML = `<p class="text-amber-500 text-xs font-semibold text-center py-10">Harap masukkan WEB_APP_URL Google Apps Script</p>`;
+        if(loadingStateEl) loadingStateEl.innerHTML = `<p class="text-amber-500 text-xs font-semibold text-center py-10">Masukkan WEB_APP_URL Google Apps Script</p>`;
         return;
     }
 
@@ -303,7 +303,7 @@ function renderLineChart(chartData) {
             labels: chartData.labels,
             datasets: [
                 {
-                    label: 'Sudah Melapor',
+                    label: 'Sudah Lapor',
                     data: chartData.sudahLaporSeries,
                     borderColor: '#10b981',
                     backgroundColor: createGradient('#10b981'),
@@ -314,7 +314,7 @@ function renderLineChart(chartData) {
                     pointBackgroundColor: '#10b981'
                 },
                 {
-                    label: 'Belum Melapor',
+                    label: 'Belum Lapor',
                     data: chartData.belumLaporSeries,
                     borderColor: '#ef4444',
                     backgroundColor: createGradient('#ef4444'),
@@ -500,7 +500,7 @@ function handleFormSubmit(e) {
     const skpkName = selectSKPK.value.trim();
 
     if (!SKPK_LIST.includes(skpkName)) {
-        showToast("Silakan pilih nama instansi SKPK yang valid dari daftar!", "error");
+        showToast("Silakan pilih nama SKPK yang valid dari daftar!", "error");
         selectSKPK.focus();
         return;
     }
