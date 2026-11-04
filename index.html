@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Aplikasi SKPK - Aceh Jaya</title>
+    <!-- Favicon menggunakan aset webp -->
+    <link rel="icon" type="image/webp" href="favicon_acehjayakab.webp">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- Kontainer Utama -->
+    <div class="flex min-h-screen w-full relative">
+
+        <!-- ZONA HOVER PEMICU DI TEPI KIRI LAYAR (Lebar 40px) -->
+        <div id="sidebarTrigger" class="hidden lg:block fixed left-0 top-0 h-full w-10 z-40"></div>
+
+        <!-- PANEL TERINTEGRASI (Menu Sidebar + Footer) -->
+        <aside id="sidebarPanel" class="hidden lg:flex fixed left-0 top-0 h-full w-64 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-r border-slate-200 dark:border-slate-800 shadow-2xl z-50 transition-transform duration-300 ease-in-out -translate-x-[244px] flex-col justify-between py-4 px-3">
+            
+    <!-- Pita Panah Penarik di Tengah Ujung Panel -->
+    <div id="arrowIndicator" class="absolute -right-5 top-1/2 -translate-y-1/2 w-5 h-12 bg-blue-600 text-white flex items-center justify-center rounded-r-xl shadow-lg transition-opacity pointer-events-none z-50" aria-hidden="true">
+        <i class="fas fa-chevron-right text-xs"></i>
+    </div>
+
+    <!-- Logo & Identitas di Panel Samping -->
+    <header class="space-y-2 border-b border-slate-100 dark:border-slate-800 pb-3 flex-shrink-0">
+        <div class="flex items-center gap-2.5">
+            <figure class="w-8 h-8 rounded-full overflow-hidden border border-blue-500/30 shadow-md flex items-center justify-center bg-white flex-shrink-0 m-0">
+                <img src="acehjaya_round.webp" alt="Logo Aceh Jaya" class="w-full h-full object-cover">
+            </figure>
+            <div>
+                <h1 class="font-black text-xs tracking-tight m-0 text-slate-900 dark:text-slate-100">Kabupaten Aceh Jaya</h1>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium m-0">Monitoring Aplikasi</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu Utama / Sidebar Navigasi (Font Proporsional & Seragam) -->
+    <nav class="space-y-1.5 flex-1 py-2 overflow-y-auto" aria-label="Menu Utama Terpadu">
+        <small class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block px-2 mb-1.5">Navigasi Sistem</small>
+        
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="menu-btn w-full flex items-center gap-3 py-2 px-3 bg-blue-600 text-white rounded-lg shadow-md shadow-blue-500/20 font-semibold transition text-xs">
+            <i class="fas fa-chart-line w-4 text-center text-xs"></i> <span>Dashboard</span>
+        </button>
+        
+        <button onclick="switchTab('skpk')" id="nav-skpk" class="menu-btn w-full flex items-center gap-3 py-2 px-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg font-medium transition text-xs">
+            <i class="fas fa-building-user w-4 text-center text-xs"></i> <span>Daftar SKPK</span>
+        </button>
+        
+        <button onclick="switchTab('aplikasi')" id="nav-aplikasi" class="menu-btn w-full flex items-center gap-3 py-2 px-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg font-medium transition text-xs">
+            <i class="fas fa-laptop-code w-4 text-center text-xs"></i> <span>Daftar Aplikasi</span>
+        </button>
+        
+        <button onclick="switchTab('input')" id="nav-input" class="menu-btn w-full flex items-center gap-3 py-2 px-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg font-medium transition text-xs">
+            <i class="fas fa-file-pen w-4 text-center text-xs"></i> <span>Pendataan Aplikasi</span>
+        </button>
+    </nav>
+
+    <!-- Footer di dalam Panel Samping -->
+    <footer class="border-t border-slate-100 dark:border-slate-800 pt-2.5 text-center space-y-1 flex-shrink-0">
+        <hgroup class="flex items-center justify-center gap-1.5">
+            <figure class="h-5 px-1 py-0.5 rounded overflow-hidden bg-transparent flex items-center justify-center m-0">
+                <img src="acehjaya_diskominsa.webp" alt="Logo Diskominsa Aceh Jaya" class="h-full w-auto object-contain">
+            </figure>
+            <h3 class="font-black text-xs tracking-wide text-slate-900 dark:text-slate-100 m-0">DISKOMINSA ACEH JAYA</h3>
+        </hgroup>
+        <p class="text-[8px] text-slate-400 font-medium m-0 leading-tight">Seksi Pengembangan dan Pengelolaan Data dan Aplikasi</p>
+    </footer>
+</aside>
+
+        <!-- AREA KONTEN UTAMA -->
+        <main class="flex-1 w-full p-4 sm:p-8 space-y-6 lg:pl-12 transition-all duration-300 min-h-screen flex flex-col justify-between">
+            
+            <div class="space-y-6 w-full max-w-7xl mx-auto">
+                <!-- Header Utama dengan Tombol Tema di Sebelah Kanan -->
+                <header class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm flex items-center justify-between gap-4">
+                    <div>
+                        <h2 id="pageTitle" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 m-0">Dashboard Monitoring</h2>
+                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 m-0">Daftar Pengunaan aplikasi SKPK Pemerintah Kabupaten Aceh Jaya</p>
+                    </div>
+                    <!-- Tombol Mode Theme di Kanan Atas -->
+                    <button id="themeToggle" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex-shrink-0" aria-label="Ubah Tema">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:inline text-amber-400"></i>
+                    </button>
+                </header>
+
+                <div id="loadingState"></div>
+
+                <!-- TAB 1: DASHBOARD -->
+                <section id="tab-dashboard" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm relative overflow-hidden flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider m-0">Total SKPK</h3>
+                                <p id="totalSKPK" class="text-3xl font-black text-slate-900 dark:text-slate-100 mt-2 m-0">40</p>
+                            </div>
+                            <span class="p-3 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-xl" aria-hidden="true">
+                                <i class="fas fa-building-columns text-xl"></i>
+                            </span>
+                        </article>
+
+                        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm relative overflow-hidden flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider m-0">Sudah Lapor</h3>
+                                <p id="totalSudahLapor" class="text-3xl font-black text-emerald-600 dark:text-emerald-400 mt-2 m-0">0</p>
+                            </div>
+                            <span class="p-3 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl" aria-hidden="true">
+                                <i class="fas fa-circle-check text-xl"></i>
+                            </span>
+                        </article>
+
+                        <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm relative overflow-hidden flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider m-0">Belum Lapor</h3>
+                                <p id="totalBelumLapor" class="text-3xl font-black text-amber-600 dark:text-amber-400 mt-2 m-0">40</p>
+                            </div>
+                            <span class="p-3 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl" aria-hidden="true">
+                                <i class="fas fa-clock text-xl"></i>
+                            </span>
+                        </article>
+                    </div>
+
+                    <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
+                        <header class="flex items-center justify-between">
+                            <h3 class="font-bold text-base sm:text-lg text-slate-900 dark:text-slate-100 flex items-center gap-2 m-0">
+                                <i class="fas fa-chart-line text-blue-600"></i> Grafik Status Laporan SKPK
+                            </h3>
+                            <span class="text-xs font-semibold px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl">Keseluruhan 40 SKPK</span>
+                        </header>
+                        <div class="h-72 sm:h-80 w-full relative">
+                            <canvas id="mainLineChart"></canvas>
+                        </div>
+                    </article>
+                </section>
+
+                <!-- TAB 2: DAFTAR SKPK -->
+                <section id="tab-skpk" class="hidden space-y-4">
+                    <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
+                        <header class="p-5 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                            <h3 class="font-bold text-base text-slate-900 dark:text-slate-100 m-0">Daftar SKPK & Status Laporan</h3>
+                            <span id="skpkCountInfo" class="text-xs font-semibold px-3 py-1 bg-blue-500/10 text-blue-600 dark:text-blue-300 rounded-xl">Total 40 SKPK terdata</span>
+                        </header>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider border-b border-slate-200 dark:border-slate-800">
+                                        <th class="px-4 py-3.5 text-center w-14">No</th>
+                                        <th class="px-4 py-3.5">Nama SKPK</th>
+                                        <th class="px-4 py-3.5 text-center">Status Aplikasi</th>
+                                        <th class="px-4 py-3.5">Penanggung Jawab</th>
+                                        <th class="px-4 py-3.5 text-center">Status Lapor</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="skpkTableBody" class="divide-y divide-slate-200 dark:divide-slate-800 text-xs sm:text-sm"></tbody>
+                            </table>
+                        </div>
+                    </article>
+                </section>
+
+                <!-- TAB 3: DAFTAR APLIKASI -->
+                <section id="tab-aplikasi" class="hidden space-y-4">
+                    <header class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-base text-slate-900 dark:text-slate-100 m-0">Daftar Penggunaan Aplikasi SKPK</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 m-0">Rincian aplikasi, fungsi, dan pengelola akun</p>
+                        </div>
+                        <span id="appCountInfo" class="text-xs font-semibold px-3 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 rounded-xl">0 Aplikasi</span>
+                    </header>
+                    <div id="appContainerList" class="space-y-4"></div>
+                </section>
+
+                <!-- TAB 4: FORM INPUT -->
+                <section id="tab-input" class="hidden space-y-4">
+                    <article class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
+                        
+                        <!-- Dekorasi Desain Estetik di Sudut Kanan Atas Kartu Form -->
+                        <div class="absolute -top-12 -right-12 w-36 h-36 bg-gradient-to-br from-blue-500/20 to-indigo-500/0 rounded-full blur-xl pointer-events-none" aria-hidden="true"></div>
+                        <div class="absolute top-0 right-0 w-28 h-28 bg-blue-600/10 dark:bg-blue-400/10 rounded-bl-[100px] pointer-events-none flex items-start justify-end p-5 text-blue-600/30 dark:text-blue-400/30">
+                            <i class="fas fa-file-pen text-2xl"></i>
+                        </div>
+
+                        <header class="mb-6 relative z-10 pr-12">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1 m-0">Form Pendataan Aplikasi SKPK</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 m-0">Tambahkan data aplikasi baru</p>
+                        </header>
+                        
+                        <form id="inputForm" onsubmit="handleFormSubmit(event)" class="space-y-5 relative z-10">
+                            <fieldset class="border-0 p-0 m-0 space-y-5">
+                                <div class="space-y-2">
+                                    <label for="inputSKPK" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Pilih Instansi SKPK</label>
+                                    <div class="relative">
+                                        <input type="text" id="inputSKPK" list="skpkOptions" placeholder="Ketik atau pilih nama instansi SKPK..." class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-950/60 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium text-sm transition" required>
+                                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"><i class="fas fa-chevron-down text-xs"></i></span>
+                                    </div>
+                                    <datalist id="skpkOptions"></datalist>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="space-y-2">
+                                        <label for="inputNamaApp" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Nama Aplikasi</label>
+                                        <input type="text" id="inputNamaApp" placeholder="Contoh: SRIKANDI" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-950/60 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition" required>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label for="inputTahunApp" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Tahun Pembuatan</label>
+                                        <input type="text" id="inputTahunApp" placeholder="Contoh: 2023" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-950/60 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition" required>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label for="inputFungsi" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Fungsi Utama dan Ruang Lingkup</label>
+                                    <textarea id="inputFungsi" rows="3" placeholder="Deskripsikan fungsi aplikasi..." class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-950/60 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition resize-none" required></textarea>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="space-y-2">
+                                        <label for="inputKategori" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Jenis / Kategori</label>
+                                        <div class="relative">
+                                            <select id="inputKategori" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-950/60 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition appearance-none cursor-pointer">
+                                                <option value="Pusat" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Pusat</option>
+                                                <option value="Daerah" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Daerah</option>
+                                                <option value="Mandiri" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Mandiri</option>
+                                            </select>
+                                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"><i class="fas fa-chevron-down text-xs"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label for="inputStatus" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Status</label>
+                                        <div class="relative">
+                                            <select id="inputStatus" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-950/60 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition appearance-none cursor-pointer">
+                                                <option value="Aktif" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Aktif</option>
+                                                <option value="Dalam perbaikan" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Dalam perbaikan</option>
+                                                <option value="Non-Aktif" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Non-Aktif</option>
+                                            </select>
+                                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"><i class="fas fa-chevron-down text-xs"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="space-y-2">
+                                        <label for="inputPJ" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Penanggung Jawab Aplikasi</label>
+                                        <input type="text" id="inputPJ" placeholder="Nama / Instansi PJ" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-950/60 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition" required>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label for="inputPengelola" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Pengelola Akun</label>
+                                        <input type="text" id="inputPengelola" placeholder="Nama Pengelola" class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-950/60 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition" required>
+                                    </div>
+                                </div>
+
+                                <div class="pt-4">
+                                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/25 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-sm tracking-wide">
+                                        <i class="fas fa-save"></i> Simpan data aplikasi
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </article>
+                </section>
+            </div>
+
+            <!-- Footer Hak Cipta di bawah Konten Utama -->
+            <footer class="text-center py-6 text-xs text-slate-400 border-t border-slate-200 dark:border-slate-800 mt-12 w-full max-w-7xl mx-auto mb-16 lg:mb-0">
+                <p class="m-0">© 2026 Diskominsa Kabupaten Aceh Jaya — Seksi Pengembangan dan Pengelolaan Data dan Aplikasi</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Mobile Bottom Navigation Bar (Hanya Muncul di Mobile) -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-40 px-6 py-3 flex justify-around items-center shadow-lg" aria-label="Navigasi Seluler">
+        <button onclick="switchTab('dashboard')" id="mob-dashboard" class="mob-btn flex flex-col items-center text-blue-600 dark:text-blue-400 text-xs font-bold transition transform hover:scale-110">
+            <i class="fas fa-chart-line text-lg mb-1"></i> Dashboard
+        </button>
+        <button onclick="switchTab('skpk')" id="mob-skpk" class="mob-btn flex flex-col items-center text-slate-500 dark:text-slate-400 text-xs transition transform hover:scale-110">
+            <i class="fas fa-building-user text-lg mb-1"></i> SKPK
+        </button>
+        <button onclick="switchTab('aplikasi')" id="mob-aplikasi" class="mob-btn flex flex-col items-center text-slate-500 dark:text-slate-400 text-xs transition transform hover:scale-110">
+            <i class="fas fa-laptop-code text-lg mb-1"></i> Aplikasi
+        </button>
+        <button onclick="switchTab('input')" id="mob-input" class="mob-btn flex flex-col items-center text-slate-500 dark:text-slate-400 text-xs transition transform hover:scale-110">
+            <i class="fas fa-file-pen text-lg mb-1"></i> Input
+        </button>
+    </nav>
+
+    <!-- Toast Notification Container -->
+    <aside id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none" aria-label="Notifikasi"></aside>
+
+    <!-- Script JS Tambahan untuk Kontrol Hover Panel Mulus -->
+    <script>
+        const panel = document.getElementById('sidebarPanel');
+        const trigger = document.getElementById('sidebarTrigger');
+        const arrow = document.getElementById('arrowIndicator');
+
+        function openPanel() {
+            panel.classList.remove('-translate-x-[244px]');
+            panel.classList.add('translate-x-0');
+            arrow.style.opacity = '0';
+        }
+
+        function closePanel() {
+            panel.classList.remove('translate-x-0');
+            panel.classList.add('-translate-x-[244px]');
+            arrow.style.opacity = '1';
+        }
+
+        trigger.addEventListener('mouseenter', openPanel);
+        panel.addEventListener('mouseenter', openPanel);
+
+        panel.addEventListener('mouseleave', (e) => {
+            closePanel();
+        });
+
+        trigger.addEventListener('mouseleave', (e) => {
+            setTimeout(() => {
+                if (!panel.matches(':hover') && !trigger.matches(':hover')) {
+                    closePanel();
+                }
+            }, 50);
+        });
+    </script>
+
+    <!-- Script JS Utama -->
+    <script src="script.js"></script>
+
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker berhasil didaftarkan:', reg.scope))
+                .catch(err => console.log('Pendaftaran Service Worker gagal:', err));
+        });
+    }
+</script>
+</body>
+</html>
