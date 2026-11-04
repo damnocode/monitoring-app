@@ -95,7 +95,7 @@
                 <header class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm flex items-center justify-between gap-4">
                     <div>
                         <h2 id="pageTitle" class="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 m-0">Dashboard Monitoring</h2>
-                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 m-0">Daftar Pengunaan aplikasi SKPK Pemerintah Kabupaten Aceh Jaya</p>
+                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 m-0">Daftar Penggunaan aplikasi SKPK Pemerintah Kabupaten Aceh Jaya</p>
                     </div>
                     <!-- Tombol Mode Theme di Kanan Atas -->
                     <button id="themeToggle" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex-shrink-0" aria-label="Ubah Tema">
@@ -143,9 +143,9 @@
                     <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
                         <header class="flex items-center justify-between">
                             <h3 class="font-bold text-base sm:text-lg text-slate-900 dark:text-slate-100 flex items-center gap-2 m-0">
-                                <i class="fas fa-chart-line text-blue-600"></i> Grafik Status Laporan SKPK
+                                <i class="fas fa-chart-line text-blue-600"></i> Status Laporan SKPK
                             </h3>
-                            <span class="text-xs font-semibold px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl">Keseluruhan 40 SKPK</span>
+                            <span class="text-xs font-semibold px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl">40 SKPK</span>
                         </header>
                         <div class="h-72 sm:h-80 w-full relative">
                             <canvas id="mainLineChart"></canvas>
@@ -157,7 +157,7 @@
                 <section id="tab-skpk" class="hidden space-y-4">
                     <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
                         <header class="p-5 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
-                            <h3 class="font-bold text-base text-slate-900 dark:text-slate-100 m-0">Daftar SKPK & Status Laporan</h3>
+                            <h3 class="font-bold text-base text-slate-900 dark:text-slate-100 m-0">Status Laporan SKPK</h3>
                             <span id="skpkCountInfo" class="text-xs font-semibold px-3 py-1 bg-blue-500/10 text-blue-600 dark:text-blue-300 rounded-xl">Total 40 SKPK terdata</span>
                         </header>
                         <div class="overflow-x-auto">
@@ -181,7 +181,7 @@
                 <section id="tab-aplikasi" class="hidden space-y-4">
                     <header class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm flex justify-between items-center">
                         <div>
-                            <h3 class="font-bold text-base text-slate-900 dark:text-slate-100 m-0">Daftar Penggunaan Aplikasi SKPK</h3>
+                            <h3 class="font-bold text-base text-slate-900 dark:text-slate-100 m-0">Daftar Aplikasi SKPK</h3>
                             <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 m-0">Rincian aplikasi, fungsi, dan pengelola akun</p>
                         </div>
                         <span id="appCountInfo" class="text-xs font-semibold px-3 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 rounded-xl">0 Aplikasi</span>
@@ -200,14 +200,14 @@
                         </div>
 
                         <header class="mb-6 relative z-10 pr-12">
-                            <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1 m-0">Form Pendataan Aplikasi SKPK</h3>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1 m-0">Pendataan Aplikasi</h3>
                             <p class="text-xs text-slate-500 dark:text-slate-400 m-0">Tambahkan data aplikasi baru</p>
                         </header>
                         
                         <form id="inputForm" onsubmit="handleFormSubmit(event)" class="space-y-5 relative z-10">
                             <fieldset class="border-0 p-0 m-0 space-y-5">
                                 <div class="space-y-2">
-                                    <label for="inputSKPK" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Pilih Instansi SKPK</label>
+                                    <label for="inputSKPK" class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Pilih SKPK</label>
                                     <div class="relative">
                                         <input type="text" id="inputSKPK" list="skpkOptions" placeholder="Ketik atau pilih nama instansi SKPK..." class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/50 dark:bg-slate-950/60 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium text-sm transition" required>
                                         <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"><i class="fas fa-chevron-down text-xs"></i></span>
